@@ -1,16 +1,23 @@
-
 import React, { useState } from 'react';
-import { Text, TextInput, Button, SafeAreaView, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { Text, TextInput, Button, SafeAreaView, StyleSheet, TouchableWithoutFeedback, Keyboard, View } from 'react-native';
+import { useDifficulty } from '../components/difficultyContext.js'
 const SpotifyWebApi = require("spotify-web-api-node");
 
 var spotifyApi = new SpotifyWebApi();
+var difficulty = 4;
 
 const Home = ({navigation}) => {
+  const { difficulty, setDifficulty } = useDifficulty();
+
+  const handleSetDifficulty = (level) => {
+    setDifficulty(level);
+  };
   const [songSearch, setSongSearch] = useState('');
   const [genreSearch, setGenreSearch] = useState('');
   const [languageSearch, setLanguageSearch] = useState('');
+  
 
-  spotifyApi.setAccessToken("BQCZ2hwqs4ARpDuLyzW9SAU0HXhiD-inNJdiZ4DrHYUPWOdbWFQq0kswSiBhkQgGJUqun7Jv--LFOz4LY-dMUIyjuF-DOXt4FIqZrnRQhm9szpOh1xk")
+  spotifyApi.setAccessToken("BQBGrDte4pML8wv7pyKN7OYfYrbSCdMhStI6saGAV9h784hswbbEK05evaY2G1gJG9vrLsWBWwVTFcz2WiZAp5FwaGEv2R2Cnqk1yn_3hiCzFsV8hJk")
 
 
   const handleSearchTrack = (song) => {
@@ -150,9 +157,18 @@ const Home = ({navigation}) => {
           onChangeText={(text) => setLanguageSearch(text)}
           onSubmitEditing={() => handleSearchLanguage(languageSearch)}
         />
+        <Text style={styles.header}>
+          Difficulty Level: {difficulty/2}
+        </Text>
+        <View style={styles.buttonContainer}>
+          <Button title="1" onPress={() => handleSetDifficulty(2)} color = "royalblue" />
+          <Button title="2" onPress={() => handleSetDifficulty(4)} color = "crimson" />
+          <Button title="3" onPress={() => handleSetDifficulty(6)} color = "black" />
+        </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -175,6 +191,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginLeft: 10
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  
 });
 
 export default Home;

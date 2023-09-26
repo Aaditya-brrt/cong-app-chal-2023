@@ -1,25 +1,28 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, Text, Pressable } from 'react-native';
 import Home from './components/home';
 import Player from './components/player';
 import ScorePage from './components/scorePage';
 import SearchResults from './components/searchResults';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { DifficultyProvider } from './components/difficultyContext';
 
 export default function App() {
   const Stack = createStackNavigator();
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen name = "Home" component={Home} options = {{headerShown: false}}/>
-        <Stack.Screen name = "Search Results" component={SearchResults}/>
-        <Stack.Screen name = "Player" component={Player} options = {{headerShown: false}}/>
-        <Stack.Screen name = "Results" component={ScorePage} options = {{headerShown: true}}/>
+    <DifficultyProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Home'>
+          <Stack.Screen name = "Home" component={Home} options = {{headerShown: false}}/>
+          <Stack.Screen name = "Search Results" component={SearchResults}/>
+          <Stack.Screen name = "Player" component={Player} options = {{headerShown: false}}/>
+          <Stack.Screen name = "Results" component={ScorePage} options = {{headerShown: true}}/>
 
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+        </NavigationContainer>
+    </DifficultyProvider>
   );
 };
 
