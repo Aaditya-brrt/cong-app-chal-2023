@@ -9,7 +9,10 @@ import { useDifficulty } from '../components/difficultyContext';
 const Player = ({route, navigation}) => {
   const {json, songUrl} = route.params;
   var index = 0
+  const lines = JSON.parse(json.lyrics)
+  const lyrics = lines.lyrics.lines
   const [songIndex, setSongIndex] = useState(0);
+  const [timeElapsed, setTimeElapsed] = useState(0)
   const [score, setScore] = useState(0);
   const [sound, setSound] = useState();
   const [wordsIndex, setWordsIndex] = useState(0);
@@ -24,8 +27,8 @@ const Player = ({route, navigation}) => {
 
 
   useEffect(() => {
-    textInputRefs.current = textInputRefs.current.slice(0, json.lines.length);
-  }, [json.lines.length, route.params.key]);
+    textInputRefs.current = textInputRefs.current.slice(0, lyrics.length);
+  }, [lyrics.length, route.params.key]);
 
 
   useEffect(() => {
@@ -34,9 +37,10 @@ const Player = ({route, navigation}) => {
 
     const timer = setInterval(() => {
       var time = Date.now()-start;
-      if (index < json.lines.length) {
-        if (time >= json.lines[index].startTimeMs) {
-          setCurrentLyric(json.lines[index].words);
+      setTimeElapsed((prevTimeElapsed) => prevTimeElapsed+time);
+      if (index < lyrics.length) {
+        if (time >= lyrics[index].startTimeMs) {
+          setCurrentLyric(lyrics[index].words);
           setUserInput(Array(tokenizedLine.length).fill('')); // Initialize userInput array based on tokenized line
           index +=1;
           setSongIndex(index);
@@ -48,7 +52,7 @@ const Player = ({route, navigation}) => {
         clearInterval(timer)
         time = 0
         index = 0
-        console.log(index)
+        console.log(timeElapsed)
       }
     }, 100); // Update every 100 milliseconds
 
@@ -114,6 +118,7 @@ const Player = ({route, navigation}) => {
     setTotal(0);
     time = 0; // Reset time
     index = 0; // Reset index
+    setTimeElapsed(0)
   };
 
   useEffect(() => {

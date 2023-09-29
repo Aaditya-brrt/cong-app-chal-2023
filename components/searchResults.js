@@ -10,7 +10,7 @@ const SearchResults = ({route, navigation}) => {
 
   const handlePlaySong = (songId, songUrl) =>{
     console.log(songId, songUrl)
-    fetch("https://spotify-lyric-api.herokuapp.com/?trackid=" + songId, {
+    fetch("https://7f99-2600-1700-3d41-540-e84b-8c55-2390-e830.ngrok-free.app/hello/" + songId, {
       method: 'GET'})
       .then((response) => response.json())
       .then(function(json) {
