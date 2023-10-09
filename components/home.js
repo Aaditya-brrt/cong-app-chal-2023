@@ -8,16 +8,43 @@ var difficulty = 4;
 
 const Home = ({navigation}) => {
   const { difficulty, setDifficulty } = useDifficulty();
+  const [pressedDifficulty, setPressedDifficulty] = useState(null); // Track the pressed button
+
 
   const handleSetDifficulty = (level) => {
     setDifficulty(level);
+    setPressedDifficulty(level); // Set the pressed button
+
   };
   const [songSearch, setSongSearch] = useState('');
   const [genreSearch, setGenreSearch] = useState('');
   const [languageSearch, setLanguageSearch] = useState('');
   
+  const renderButton = (level, color) => {
+    // Check if the button is pressed
+    const isPressed = pressedDifficulty === level;
+    
 
-  spotifyApi.setAccessToken("BQByMoq61mt_MuL-GamNenXon7aCvttjUMiyHDvA_3v89w6SaO5fYdKGV0KQlCi-6q0HUcpGKJMyGa6HK27ti3F_NPFMuidQ4cJ-bhUYho1sJ-LZuvg")
+    // Define a border style for pressed buttons
+    const buttonBorderStyle = isPressed ? { borderColor: color } : null; // Match border color to button color
+
+    // Define a text style for pressed buttons
+    const buttonTextStyle = isPressed ? styles.pressedButtonText : null;
+
+    return (
+      <View style = {styles.outerButton}>
+      <View style={[styles.buttonContainer, buttonBorderStyle]}>
+        <Button
+          title={(level/2).toString()}
+          onPress={() => handleSetDifficulty(level)}
+          color={color}
+          style={isPressed ? styles.pressedButton : null}
+        />
+      </View>
+      </View>
+    );
+  };
+  spotifyApi.setAccessToken("BQDHBYb59US2FGhsyynJQnbLSiqRXvoBQz1OvNZpiJFe0yx1Gk929osuEthJpK252Q4_qmKedvSfslfx7LKZS2G-N_dGri8gSY7fMFXtkPdfPbUDSbk")
 
 
   const handleSearchTrack = (song) => {
@@ -134,8 +161,9 @@ const Home = ({navigation}) => {
     <TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
         <Text style={styles.header}>
-          Welcome to the Song Lyrics Game!
+          Welcome to the Lyrics Trainer!
         </Text>
+        <View style = {styles.inputs}>
         <TextInput
           style={styles.input}
           placeholder="Search for songs..."
@@ -143,6 +171,8 @@ const Home = ({navigation}) => {
           onChangeText={(text) => setSongSearch(text)}
           onSubmitEditing={() => handleSearchTrack(songSearch)}
         />
+        </View>
+        <View style = {styles.inputs}>
         <TextInput
           style={styles.input}
           placeholder="Search for a genre..."
@@ -150,6 +180,8 @@ const Home = ({navigation}) => {
           onChangeText={(text) => setGenreSearch(text)}
           onSubmitEditing={() => handleSearchGenre(genreSearch)}
         />
+        </View>
+        <View style = {styles.inputs}>
         <TextInput
           style={styles.input}
           placeholder="Search for a language..."
@@ -157,13 +189,14 @@ const Home = ({navigation}) => {
           onChangeText={(text) => setLanguageSearch(text)}
           onSubmitEditing={() => handleSearchLanguage(languageSearch)}
         />
+        </View>
         <Text style={styles.header}>
           Difficulty Level: {difficulty/2}
         </Text>
         <View style={styles.buttonContainer}>
-          <Button title="1" onPress={() => handleSetDifficulty(2)} color = "royalblue" />
-          <Button title="2" onPress={() => handleSetDifficulty(4)} color = "crimson" />
-          <Button title="3" onPress={() => handleSetDifficulty(6)} color = "black" />
+          {renderButton(2, 'black')}
+          {renderButton(4, 'royalblue')}
+          {renderButton(6, 'crimson')}
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
@@ -181,6 +214,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     marginBottom: 16,
+    paddingTop: 16
   },
   input: {
     height: 40,
@@ -191,10 +225,32 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginLeft: 10
   },
-  buttonContainer: {
+  buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
+  },
+  buttonContainer: {
+    borderWidth: 2, // Add a border to the container
+    borderColor: 'transparent', // Initialize with a transparent border color
+    borderRadius: 10, // Add border radius for rounded corners
+    alignItems: 'center'
+  },
+  pressedButton: {
+    borderColor: 'royalblue', // Customize the border color when pressed
+  },
+  pressedButtonText: {
+    color: 'royalblue', // Customize the text color when pressed
+  },
+  inputs: {
+    paddingTop:16,
+    shadowOffset: {width: 1, height: 1},
+    shadowColor: '#333',
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+  },
+  outerButton: {
+    width: 60, // Adjust the width to make it a square
   },
   
 });

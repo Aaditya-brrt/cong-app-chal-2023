@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, Button, SafeAreaView, StyleSheet, TouchableWithoutFeedback, Keyboard, FlatList, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, SafeAreaView, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity, ScrollView } from 'react-native';
 const SpotifyWebApi = require("spotify-web-api-node");
 import { Audio } from 'expo-av';
 import Icon from 'react-native-vector-icons/Foundation'; // Use any icon library you prefer
 import { useDifficulty } from '../components/difficultyContext';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 
 const Player = ({route, navigation}) => {
@@ -12,7 +13,8 @@ const Player = ({route, navigation}) => {
   const lines = JSON.parse(json.lyrics)
   const lyrics = lines.lyrics.lines
   const [songIndex, setSongIndex] = useState(0);
-  const [timeElapsed, setTimeElapsed] = useState(0)
+  const [startTime, setStartTime] = useState(Date.now())
+  const [timeElapsed, setTimeElapsed] = useState(0);
   const [score, setScore] = useState(0);
   const [sound, setSound] = useState();
   const [wordsIndex, setWordsIndex] = useState(0);
@@ -22,7 +24,9 @@ const Player = ({route, navigation}) => {
   const textInputRefs = useRef([]);
   const [total, setTotal] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [intervalId, setIntervalId] = useState(null);
   const { difficulty } = useDifficulty();
+  const intervalRef = useRef(null);
 
 
 
@@ -32,32 +36,45 @@ const Player = ({route, navigation}) => {
 
 
   useEffect(() => {
+    var start = Date.now()
 
-    var start = Date.now();
-
-    const timer = setInterval(() => {
+    const id = setInterval(() => {
       var time = Date.now()-start;
-      setTimeElapsed((prevTimeElapsed) => prevTimeElapsed+time);
+      setTimeElapsed(time);
       if (index < lyrics.length) {
         if (time >= lyrics[index].startTimeMs) {
           setCurrentLyric(lyrics[index].words);
           setUserInput(Array(tokenizedLine.length).fill('')); // Initialize userInput array based on tokenized line
           index +=1;
           setSongIndex(index);
-          if (tokenizedLine.some(word => word.isBlanked)) {
-            textInputRefs.current[index - 1].focus();
-          }
+          // if (tokenizedLine.some(word => word.isBlanked)) {
+          //   textInputRefs.current[index - 1].focus();
+          // }
         }
       } else{
-        clearInterval(timer)
+        clearInterval(id)
         time = 0
         index = 0
-        console.log(timeElapsed)
       }
-    }, 100); // Update every 100 milliseconds
-
+    }, 100)
 
   }, [route.params.key]);
+
+  // useEffect(() => {
+  //   if (songIndex < lyrics.length) {
+  //     //console.log(index)
+  //     if (timeElapsed >= lyrics[songIndex].startTimeMs) {
+  //       setCurrentLyric(lyrics[songIndex].words);
+  //       setUserInput(Array(tokenizedLine.length).fill('')); // Initialize userInput array based on tokenized line
+  //       setSongIndex(songIndex+1);
+  //       index+=1
+  //     }
+  //     }else{
+  //       //clearInterval(intervalId)
+  //       setSongIndex(0)
+  //       index=0
+  //   }
+  // }, [timeElapsed, songIndex])
 
   useEffect(() => {
     playSound();
@@ -119,6 +136,9 @@ const Player = ({route, navigation}) => {
     time = 0; // Reset time
     index = 0; // Reset index
     setTimeElapsed(0)
+    setIsPlaying(true)
+    setIntervalId(null)
+    setStartTime(Date.now())
   };
 
   useEffect(() => {
@@ -130,6 +150,7 @@ const Player = ({route, navigation}) => {
     if (sound) {
     sound.setOnPlaybackStatusUpdate((status) => {
       if (status.didJustFinish) {
+      console.log(timeElapsed);
       resetGame();
       navigation.navigate("Results", {score, total, json, songUrl})
     }})}
@@ -161,20 +182,27 @@ const Player = ({route, navigation}) => {
   }
 
 
-  // useEffect(() => {
-  //   // Play or pause the audio based on the isPlaying state
-  //   if (sound) {
-  //     if (isPlaying) {
-  //       sound.playAsync();
-  //     } else {
-  //       sound.pauseAsync();
-  //     }
-  //   }
-  // }, [isPlaying, sound]);
+  useEffect(() => {
+    // Play or pause the audio based on the isPlaying state
+    if (sound) {
+      if (isPlaying) {
+        sound.playAsync();
+      } else {
+        sound.pauseAsync();
+      }
+    }
+  }, [isPlaying, sound]);
 
-  const handlePlayPauseToggle = () => {
-    setIsPlaying(!isPlaying); // Toggle play/pause state
+  const handlePause = () => {
+    setIsPlaying(false); // Toggle play/pause state
   };
+
+  const handleResume = () => {
+    if (!isPlaying) {
+      setStartTime(new Date() - timeElapsed);
+      setIsPlaying(true)
+    }
+  }
 
 
   const renderLine = () => {
@@ -199,9 +227,11 @@ const Player = ({route, navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.lyricsContainer}>{renderLine()}</View>
-      {/* <TouchableOpacity onPress={handlePlayPauseToggle}>
-        <Icon name={isPlaying ? 'pause' : 'play'} size={40} color="blue" />
-      </TouchableOpacity> */}
+      {/* <View style = {styles.iconContainer}>
+        <TouchableOpacity onPress={isPlaying ? handlePause: handleResume} style = {styles.iconButton}>
+          <Icon name={isPlaying ? 'pause' : 'play'} size={40} />
+        </TouchableOpacity>
+      </View> */}
     </SafeAreaView>
   );
   
@@ -234,32 +264,14 @@ const Player = ({route, navigation}) => {
       borderBottomWidth: 1,
       minWidth: 50,
       marginHorizontal: 4
-    }  
+    },
+    iconContainer: {
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    iconButton: {
+      padding:16
+    }
   });
 
  export default Player;
-
-
- //   spotifyApi.setAccessToken('BQBgVNIcpFSyyxadtk_Rm3dtnANXhqOJPz_0xDAQT3kfjOfcx6iuIHiiH-D7dg8kfRZJ86FOfr4V-OhkKqdX7BsCDuY0unJzc05XeC6-mexVFIxu3dE')
-
-//   useEffect(() => {
-//     spotifyApi.play({
-//       uris: 'spotify:track:2lLG56qpLP3UbcLuzMvkWX',
-//       position_ms: 5000
-//     })
-//     .then(
-//       function () {
-//         console.log("playing: ", topSongs.data.items[props.index].name);
-//       },
-//       function (err) {
-//         //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-//         console.log("Something went wrong!", err);
-//       }
-//     );
-//   })
-  
-//   return (
-//     <View>
-//       <Text>hi there</Text>
-//     </View>
-//   )
