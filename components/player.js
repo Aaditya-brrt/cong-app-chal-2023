@@ -5,6 +5,7 @@ import { Audio } from 'expo-av';
 import Icon from 'react-native-vector-icons/Foundation'; // Use any icon library you prefer
 import { useDifficulty } from '../components/difficultyContext';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
+import { StatusBar } from 'expo-status-bar';
 
 
 const Player = ({route, navigation}) => {
@@ -232,6 +233,7 @@ const Player = ({route, navigation}) => {
           <Icon name={isPlaying ? 'pause' : 'play'} size={40} />
         </TouchableOpacity>
       </View> */}
+      <StatusBar style="dark" />
     </SafeAreaView>
   );
   

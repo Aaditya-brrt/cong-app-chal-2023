@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import Card from '../styles/card'
+import { StatusBar } from 'expo-status-bar';
 
 
 
@@ -10,7 +11,7 @@ const SearchResults = ({route, navigation}) => {
 
   const handlePlaySong = (songId, songUrl) =>{
     console.log(songId, songUrl)
-    fetch("https://e67d-2600-1700-3d41-540-95d1-800b-f9d2-b1b0.ngrok-free.app/hello/" + songId, {
+    fetch("https://242b-2600-1700-3d41-540-4ca7-821-18d0-6ad.ngrok-free.app/hello/" + songId, {
       method: 'GET'})
       .then((response) => response.json())
       .then(function(json) {
@@ -37,6 +38,7 @@ const SearchResults = ({route, navigation}) => {
           </TouchableOpacity>
         )}
       />
+      <StatusBar style="dark" />
     </SafeAreaView>
   );
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Text, TextInput, Button, SafeAreaView, StyleSheet, TouchableWithoutFeedback, Keyboard, View } from 'react-native';
 import { useDifficulty } from '../components/difficultyContext.js'
 const SpotifyWebApi = require("spotify-web-api-node");
+import { StatusBar } from 'expo-status-bar';
+
 
 var spotifyApi = new SpotifyWebApi();
 var difficulty = 4;
@@ -44,7 +46,7 @@ const Home = ({navigation}) => {
       </View>
     );
   };
-  spotifyApi.setAccessToken("BQDHBYb59US2FGhsyynJQnbLSiqRXvoBQz1OvNZpiJFe0yx1Gk929osuEthJpK252Q4_qmKedvSfslfx7LKZS2G-N_dGri8gSY7fMFXtkPdfPbUDSbk")
+  spotifyApi.setAccessToken("BQDHzaZtvEqrlfDB0nmh9aW49U3ZkA1Rw6KZuAjP7jl88VlyJlJgqsswUkl6wvF90WNBMlMI1-Ad8bqUxw8YfPXQrwp4oMC8cAnRq1aoLND4UbavTtc")
 
 
   const handleSearchTrack = (song) => {
@@ -194,12 +196,14 @@ const Home = ({navigation}) => {
           Difficulty Level: {difficulty/2}
         </Text>
         <View style={styles.buttonContainer}>
-          {renderButton(2, 'black')}
+          {renderButton(2, 'green')}
           {renderButton(4, 'royalblue')}
           {renderButton(6, 'crimson')}
         </View>
+        <StatusBar style="dark" />
       </SafeAreaView>
     </TouchableWithoutFeedback>
+
   );
   
 };
@@ -208,7 +212,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: 4
+    paddingTop: 4,
+    backgroundColor: "white"
   },
   header: {
     fontSize: 24,
@@ -223,7 +228,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 8,
     marginRight: 10,
-    marginLeft: 10
+    marginLeft: 10,
+    borderRadius: 10,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -244,10 +250,10 @@ const styles = StyleSheet.create({
   },
   inputs: {
     paddingTop:16,
-    shadowOffset: {width: 1, height: 1},
-    shadowColor: '#333',
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
+    // shadowOffset: { width: 1, height: 1 }, // iOS shadow offset
+    // shadowColor: '#333',
+    // shadowOpacity: 0.3,
+    // shadowRadius: 2,
   },
   outerButton: {
     width: 60, // Adjust the width to make it a square
