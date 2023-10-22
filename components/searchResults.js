@@ -11,12 +11,12 @@ const SearchResults = ({route, navigation}) => {
 
   const handlePlaySong = (songId, songUrl) =>{
     console.log(songId, songUrl)
-    fetch("https://242b-2600-1700-3d41-540-4ca7-821-18d0-6ad.ngrok-free.app/hello/" + songId, {
+    fetch("https://e2cf-2600-1700-3d41-540-9dee-10de-61b5-540a.ngrok-free.app/hello/" + songId, {
       method: 'GET'})
       .then((response) => response.json())
       .then(function(json) {
         console.log(JSON.stringify(json));
-        navigation.navigate("Player", {key: new Date().getTime(), json, songUrl})
+        navigation.navigate("Player", {key: new Date().getTime(), json, songId})
       })
       .catch(function(error) {
         console.log('There has been a problem with your fetch operation: ' + error.message);

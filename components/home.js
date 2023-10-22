@@ -46,7 +46,7 @@ const Home = ({navigation}) => {
       </View>
     );
   };
-  spotifyApi.setAccessToken("BQDHzaZtvEqrlfDB0nmh9aW49U3ZkA1Rw6KZuAjP7jl88VlyJlJgqsswUkl6wvF90WNBMlMI1-Ad8bqUxw8YfPXQrwp4oMC8cAnRq1aoLND4UbavTtc")
+  spotifyApi.setAccessToken("BQAsvd9pf6GO_BhNgCagFuQwoBWShAIRwsk3ZhHrGJMyIHCzrp1LEPji8dSoiwNjLkYJ6Py0jhhO6CplnO73eJqluSH4WvKuFDd52jPkHKUTkTUkP5Y")
 
 
   const handleSearchTrack = (song) => {

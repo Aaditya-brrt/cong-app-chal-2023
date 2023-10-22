@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 
 const ScorePage = ({navigation, route}) => {
 
-  const {score, total, json, songUrl} = route.params;
+  const {score, total, json, songId} = route.params;
   var percent;
 
   if (score/total == 0){
@@ -30,7 +30,7 @@ const ScorePage = ({navigation, route}) => {
         <Image source = {scores.results[percent]} style = {styles.image} resizeMode = 'contain' />
         <Text style = {styles.lyrics}>You got {score} out of {total} words correct</Text>
       </View>
-      <Button title = "Try Again" onPress={() => navigation.navigate("Player", {key: new Date().getTime(), json, songUrl})} />
+      <Button title = "Try Again" onPress={() => navigation.navigate("Player", {key: new Date().getTime(), json, songId})} />
       <Button title="Finish" onPress={() => navigation.popToTop()} />
       <StatusBar style="dark" />
     </SafeAreaView>

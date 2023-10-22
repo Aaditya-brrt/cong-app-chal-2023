@@ -9,7 +9,7 @@ import { StatusBar } from 'expo-status-bar';
 
 
 const Player = ({route, navigation}) => {
-  const {json, songUrl} = route.params;
+  const {json, songId} = route.params;
   var index = 0
   const lines = JSON.parse(json.lyrics)
   const lyrics = lines.lyrics.lines
@@ -28,6 +28,9 @@ const Player = ({route, navigation}) => {
   const [intervalId, setIntervalId] = useState(null);
   const { difficulty } = useDifficulty();
   const intervalRef = useRef(null);
+  const spanishId = "1r28ZDlVxz24Rmy8Sq9REY";
+  const popId = "5cF0dROlMOK5uNZtivgu50";
+  const songSpecific = "4oaj36KzXRgDg4McgcTsZK";
 
 
 
@@ -99,8 +102,17 @@ const Player = ({route, navigation}) => {
       shouldDuckAndroid: false,
     });
 
-    const { sound } = await Audio.Sound.createAsync( require("../assets/song.mp3"));
-    setSound(sound);
+    if (songId == spanishId) {
+      const { sound } = await Audio.Sound.createAsync( require("../assets/spanishSong.mp3"));
+      setSound(sound);
+    } else if (songId == popId) {
+      const { sound } = await Audio.Sound.createAsync( require("../assets/popSong.mp3"));
+      setSound(sound);
+    } else if (songId == songSpecific) {
+      const { sound } = await Audio.Sound.createAsync( require("../assets/specificSong.mp3"));
+      setSound(sound);
+    }
+
 
     console.log('Playing Sound');
     await sound.playAsync();
@@ -153,7 +165,7 @@ const Player = ({route, navigation}) => {
       if (status.didJustFinish) {
       console.log(timeElapsed);
       resetGame();
-      navigation.navigate("Results", {score, total, json, songUrl})
+      navigation.navigate("Results", {score, total, json, songId})
     }})}
   },)
 
