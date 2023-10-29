@@ -1,6 +1,8 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView, Text, Pressable } from 'react-native';
+import { StyleSheet, SafeAreaView, Text, Pressable, LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 import Home from './components/home';
 import Player from './components/player';
 import ScorePage from './components/scorePage';

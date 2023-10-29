@@ -102,16 +102,10 @@ const Player = ({route, navigation}) => {
       shouldDuckAndroid: false,
     });
 
-    if (songId == spanishId) {
-      const { sound } = await Audio.Sound.createAsync( require("../assets/spanishSong.mp3"));
+      const { sound } = await Audio.Sound.createAsync(SpotifyWebApi.play({
+        uris: songId
+      }));
       setSound(sound);
-    } else if (songId == popId) {
-      const { sound } = await Audio.Sound.createAsync( require("../assets/popSong.mp3"));
-      setSound(sound);
-    } else if (songId == songSpecific) {
-      const { sound } = await Audio.Sound.createAsync( require("../assets/specificSong.mp3"));
-      setSound(sound);
-    }
 
 
     console.log('Playing Sound');

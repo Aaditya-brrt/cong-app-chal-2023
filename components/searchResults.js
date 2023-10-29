@@ -11,7 +11,7 @@ const SearchResults = ({route, navigation}) => {
 
   const handlePlaySong = (songId, songUrl) =>{
     console.log(songId, songUrl)
-    fetch("https://e2cf-2600-1700-3d41-540-9dee-10de-61b5-540a.ngrok-free.app/hello/" + songId, {
+    fetch("https://a3b2-2600-1700-3d41-540-9dee-10de-61b5-540a.ngrok-free.app/hello/" + songId, {
       method: 'GET'})
       .then((response) => response.json())
       .then(function(json) {
